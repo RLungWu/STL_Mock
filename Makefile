@@ -111,6 +111,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named My_STL_Mock
+
+# Build rule for target.
+My_STL_Mock: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 My_STL_Mock
+.PHONY : My_STL_Mock
+
+# fast build rule for target.
+My_STL_Mock/fast:
+	$(MAKE) -f CMakeFiles/My_STL_Mock.dir/build.make CMakeFiles/My_STL_Mock.dir/build
+.PHONY : My_STL_Mock/fast
+
+#=============================================================================
 # Target rules for targets named STL_Mock
 
 # Build rule for target.
@@ -120,8 +133,21 @@ STL_Mock: cmake_check_build_system
 
 # fast build rule for target.
 STL_Mock/fast:
-	$(MAKE) -f CMakeFiles/STL_Mock.dir/build.make CMakeFiles/STL_Mock.dir/build
+	$(MAKE) -f src/CMakeFiles/STL_Mock.dir/build.make src/CMakeFiles/STL_Mock.dir/build
 .PHONY : STL_Mock/fast
+
+#=============================================================================
+# Target rules for targets named STL_Mock_Test
+
+# Build rule for target.
+STL_Mock_Test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 STL_Mock_Test
+.PHONY : STL_Mock_Test
+
+# fast build rule for target.
+STL_Mock_Test/fast:
+	$(MAKE) -f test/CMakeFiles/STL_Mock_Test.dir/build.make test/CMakeFiles/STL_Mock_Test.dir/build
+.PHONY : STL_Mock_Test/fast
 
 main.o: main.cpp.o
 
@@ -129,7 +155,7 @@ main.o: main.cpp.o
 
 # target to build an object file
 main.cpp.o:
-	$(MAKE) -f CMakeFiles/STL_Mock.dir/build.make CMakeFiles/STL_Mock.dir/main.cpp.o
+	$(MAKE) -f CMakeFiles/My_STL_Mock.dir/build.make CMakeFiles/My_STL_Mock.dir/main.cpp.o
 .PHONY : main.cpp.o
 
 main.i: main.cpp.i
@@ -138,7 +164,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) -f CMakeFiles/STL_Mock.dir/build.make CMakeFiles/STL_Mock.dir/main.cpp.i
+	$(MAKE) -f CMakeFiles/My_STL_Mock.dir/build.make CMakeFiles/My_STL_Mock.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -147,7 +173,7 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) -f CMakeFiles/STL_Mock.dir/build.make CMakeFiles/STL_Mock.dir/main.cpp.s
+	$(MAKE) -f CMakeFiles/My_STL_Mock.dir/build.make CMakeFiles/My_STL_Mock.dir/main.cpp.s
 .PHONY : main.cpp.s
 
 # Help Target
@@ -158,7 +184,9 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
+	@echo "... My_STL_Mock"
 	@echo "... STL_Mock"
+	@echo "... STL_Mock_Test"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
