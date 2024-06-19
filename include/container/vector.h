@@ -1,13 +1,13 @@
-#ifndef MY_VECTOR
-#define MY_VECTOR
+#ifndef STL_MOCK_INCLUDE_CONTAINER_VECTOR_H_
+#define STL_MOCK_INCLUDE_CONTAINER_VECTOR_H_
 
 
-#include <memory>
+#include "allocator.h"
 
 
 
-namespace MySTL {
-    template <typename T, class Alloc = std::allocator<T>>
+namespace mystl {
+    template <typename T, class Alloc = Allocator<T>>
     class MyVector{
         public:
             MyVector();
