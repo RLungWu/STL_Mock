@@ -8,7 +8,7 @@
 
 
 namespace mystl {
-    template <typename T, class Alloc = Allocator<T>>
+    template <typename T, class Alloc = MyAllocator<T>>
     class MyVector{
         public:
             //vector type
@@ -20,7 +20,7 @@ namespace mystl {
             typedef std::ptrdiff_t difference_type;
         
         protected:
-            typedef simple_alloc<value_type, Alloc> data_allocator;
+            typedef MyAllocator<value_type> data_allocator;
             iterator start; //The memory address of the first element
             iterator finish; //The memory address of the last element
             iterator end_of_storage; //The memory address of the end of the storage
