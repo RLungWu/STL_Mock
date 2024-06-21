@@ -5,6 +5,7 @@
 #include <climits>
 #include <new>
 #include <limits>
+#include<iostream>
 
 namespace mystl {
     template <class T>
@@ -18,23 +19,30 @@ namespace mystl {
             using size_type = size_t;
             using difference_type = std::ptrdiff_t;
 
-            MyAllocator() = default;
+            MyAllocator() noexcept: alloc_count(0){}
             ~MyAllocator() = default;
 
-            pointer allocate(size_type num_objs){
-                return static_cast<pointer>(operator new(sizeof(T)*num_objs));
+            MyAllocator(const MyAllocator&) noexcept = default;
+            MyAllocator& operator=(const MyAllocator&) noexcept = default; //Prevent Assignment
+
+            template<class U>
+            MyAllocator(const MyAllocator<U>&) noexcept {}
+
+            pointer allocate(size_type num_objs_, const_void_pointer hint_ = nullptr){
+                pointer result = static_cast<pointer>(::operator new(sizeof(T) * num_objs_));
+                if(!result) throw std::bad_alloc();
+
+                alloc_count += num_objs_;
+                return result;
             }
 
-            pointer allocate(size_type num_objs, const_void_pointer hint){
-                return allocate(num_objs);
+            void deallocate(pointer p_, size_type num_objs_) noexcept {
+                ::operator delete(p_);
+                alloc_count -= num_objs_;
             }
 
-            void deallocate(pointer p, size_type num_objs){
-                operator delete(p);
-            }
-
-            size_type max_size() const{
-                return std::numeric_limits<size_type>::max();
+            size_type max_size() const noexcept {
+                return std::numeric_limits<size_type>::max() / sizeof(T);
             }
 
             template<class U>
