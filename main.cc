@@ -1,6 +1,7 @@
-#include "vector.h"
+#include "include/container/my_vector.h"
 
 int main(){
-    MySTL::MyVector<int> vec;
+    mystl::MyVector<int> vec;
+    vec.push_back(1);
     return 0;
 }
