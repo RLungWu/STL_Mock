@@ -12,12 +12,12 @@ namespace mystl {
     class MyVector{
         public:
             //vector type
-            typedef T value_type;
-            typedef value_type* pointer;
-            typedef value_type& reference;
-            typedef value_type* iterator;
-            typedef std::size_t size_type;
-            typedef std::ptrdiff_t difference_type;
+            using value_type = T;
+            using pointer = value_type*;
+            using reference = value_type&;
+            using iterator = value_type*;
+            using size_type = std::size_t;
+            using difference_type = std::ptrdiff_t;
         
         protected:
             typedef MyAllocator<value_type> data_allocator;
