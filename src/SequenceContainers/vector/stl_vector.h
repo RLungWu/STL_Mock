@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <memory>
+#include <type_traits>
 
 
 namespace mystl{
@@ -22,25 +23,16 @@ namespace mystl{
         private:
             //iterator to indicate the vector's start
             iterator start_;
-            iterator end_;
+            iterator finish_;
             iterator end_of_storage_;
         
-        private:
-            //Allocator and construct aux functions
-            using data_allocator = Alloc;
+        
+        public: //constuctor
+            my_vector(): start_(nullptr), finish_(nullptr), end_of_storage_(nullptr){}
+            explicit my_vector (size_type n){fill_initialize(n, value_type());}
+            my_vector(size_type n, const value_type &value){fill_initialize(n, value); }
+            
 
-            //constructor
-            void fill_initialize(size_type n, const value_type &value){
-                start_ = allocate_and_fill(n, value);
-                end_ = start_ + n;
-                end_of_storage_ = end_;
-            }
-
-            iterator allocate_and_fill(size_type n, const value_type &value){
-                iterator result = data_allocator::allocate(n);
-                std::uninitialized_fill_n(result, n, value);
-                return result;
-            }
 
 
     };
