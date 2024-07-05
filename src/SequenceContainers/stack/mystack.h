@@ -1,0 +1,13 @@
+#ifndef STL_MOCK_SRC_SEQUENCECONTAINERS_STACK_MYSTACK_H_
+#define STL_MOCK_SRC_SEQUENCECONTAINERS_STACK_MYSTACK_H_
+
+
+namespace mystl{
+    
+}
+
+
+
+
+
+#endif
