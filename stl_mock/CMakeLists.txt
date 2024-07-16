@@ -12,10 +12,10 @@ add_library(${PROJECT_NAME} STATIC ${MOCK_FILES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC 
         #${CMAKE_CURRENT_SOURCE_DIR}/Algorithms
-        ${CMAKE_CURRENT_SOURCE_DIR}/Allocator
+        ${CMAKE_CURRENT_SOURCE_DIR}/allocator
         #${CMAKE_CURRENT_SOURCE_DIR}/AssociativeContainers
         #${CMAKE_CURRENT_SOURCE_DIR}/Function
         #${CMAKE_CURRENT_SOURCE_DIR}/Iterator
         #${CMAKE_CURRENT_SOURCE_DIR}/SequenceContainers
-        #${CMAKE_CURRENT_SOURCE_DIR}/Utils
+        ${CMAKE_CURRENT_SOURCE_DIR}/utils
 )
