@@ -1,15 +1,21 @@
-CMAKE_MINIMUM_REQUIRED_VERSION(3.8)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.10.0)
 
-project(STL_Mock)
+project(mystl)
 
-
+# Use C++17
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-file(GLOB_RECURSE STL_MOCK_SOURCES *.cc *.h)
+file(GLOB_RECURSE MOCK_FILES *.cc *.h)
 
-add_library(STL_Mock STATIC ${SOURCE_FILES})
+add_library(${PROJECT_NAME} STATIC ${MOCK_FILES})
 
-target_include_directories(STL_Mock PUBLIC 
-    ${CMAKE_CURRENT_SOURCE_DIR}/allocator
+target_include_directories(${PROJECT_NAME} PUBLIC 
+        #${CMAKE_CURRENT_SOURCE_DIR}/Algorithms
+        ${CMAKE_CURRENT_SOURCE_DIR}/Allocator
+        #${CMAKE_CURRENT_SOURCE_DIR}/AssociativeContainers
+        #${CMAKE_CURRENT_SOURCE_DIR}/Function
+        #${CMAKE_CURRENT_SOURCE_DIR}/Iterator
+        #${CMAKE_CURRENT_SOURCE_DIR}/SequenceContainers
+        #${CMAKE_CURRENT_SOURCE_DIR}/Utils
 )

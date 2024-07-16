@@ -8,6 +8,6 @@ set(CMAKE_CSS_STANDARD_REQUIRED ON)
 add_subdirectory(stl_mock)
 
 if(ENABLE_STL_MOCK_TESTS)
-    find_package(GTest REQUIRED)
+    #find_package(GTest REQUIRED)
     add_subdirectory("test")
 endif()
