@@ -136,6 +136,296 @@ inline void advance(InputIterator &it, Distance n){
 }
 
 //以下為三種迭代適配器
+// insert, reserve, stream
+//insert::back_insert, front_insert, insert
+template<class Container>
+class back_insert_iterator{
+    protected:
+        Container *container; //Container
+
+    public:
+        using iterator_category = output_iterator_tag;
+        using value_type = void;
+        using difference_type = void;
+        using pointer = void;
+        using reference = void;
+
+    public:
+        explicit back_insert_iterator(Container &x) : container(&x){}
+
+        back_insert_iterator &operator=(const typename Container::value_type &value){
+            container->push_back(value);//本質上是使用pushback
+            return *this;
+        }
+
+        back_insert_iterator &operator*(){return *this;}
+        back_insert_iterator &operator++(){return *this;}
+        back_insert_iterator &operator++(int){return *this;}
+};
+
+template<class Container>
+inline back_insert_iterator<Container> back_inserter(Container &x){
+    return back_insert_iterator<Container>(x);
+}
+
+template<class Container>
+class front_insert_iterator{
+    protected:
+        Container *container;
+    public:
+        using iterator_category = output_iterator_tag;
+        using value_type = void;
+        using difference_type = void;
+        using pointer = void;
+        using reference = void;
+    
+    public:
+        explicit front_insert_iterator(Container &x) : container(&x){}
+        front_insert_iterator &operator=(
+            const typename Container::value_type &value){
+                container->push_front(value);
+                return *this;
+        }
+
+        front_insert_iterator &operator*(){return *this;}
+        front_insert_iterator &operator++(){return *this;}
+        front_insert_iterator &operator++(int){return *this;}
+        
+};
+
+template<class Container>
+inline front_insert_iterator<Container> front_inserter(Container &x){
+    return front_insert_iterator<Container>(x);
+}
+
+template<class Container>
+class insert_iterator{
+    protected:
+        Container *container;
+        typename Container::iterator iter;
+    public:
+        using iterator_category = output_iterator_tag;
+        using value_type = void;
+        using difference_type = void;
+        using pointer = void;
+        using reference = void;
+    
+    public:
+        explicit insert_iterator(Container &x, typename Container::iterator i) : container(&x), iter(i){}
+        insert_iterator &operator=(const typename Container::value_type &value){
+            iter = container->insert(iter, value);      //使用insert
+            ++iter;                                     //確保下一次插入的位置
+            return *this;
+        }
+
+        insert_iterator &operator*(){return *this;}
+        insert_iterator &operator++(){return *this;}
+        insert_iterator &operator++(int){return *this;}
+};
+
+template<class Container, class Iterator>
+inline insert_iterator<Container> inserter(Container &x, Iterator i){
+    using category = typename iterator_traits<Iterator>::iterator_category;
+    return insert_iterator<Container>(x, i);
+}
+
+template<class Iterator>
+class __reverse_iterator {
+  template<class It>
+  friend bool operator==(const __reverse_iterator<It> &,
+                         const __reverse_iterator<It> &);
+  template<class It>
+  friend bool operator!=(const __reverse_iterator<It> &,
+                         const __reverse_iterator<It> &);
+
+ protected:
+  Iterator current;//与之对应的正向迭代器
+
+ public:
+  using iterator_category = iterator_category_t<Iterator>;
+  using value_type = value_type_t<Iterator>;
+  using difference_type = difference_type_t<Iterator>;
+  using pointer = pointer_t<Iterator>;
+  using reference = reference_t<Iterator>;
+
+  using iterator_type = Iterator; //正向迭代器
+  using self = __reverse_iterator;//反向迭代器
+
+ public:
+  __reverse_iterator() {}
+  explicit __reverse_iterator(iterator_type value) : current(value) {}
+  __reverse_iterator(const self &value) : current(value.current) {}
+
+  iterator_type base() const { return current; }
+  reference operator*() const {
+    Iterator temp = current;
+    return *--temp;//对逆向迭代器的取值等价于对应的正向迭代器后退一个单位取值
+  }
+
+  pointer operator->() const { return &(operator*()); }
+
+  self &operator++() {
+    --current;
+    return *this;
+  }
+
+  self operator++(int) {
+    self temp = *this;
+    --current;
+    return temp;
+  }
+
+  self &operator--() {
+    ++current;
+    return *this;
+  }
+
+  self operator--(int) {
+    self temp = *this;
+    ++current;
+    return temp;
+  }
+
+  self operator+(difference_type n) const { return self(current - n); }
+
+  self &operator+=(difference_type n) const {
+    current -= n;
+    return *this;
+  }
+
+  self operator-(difference_type n) const { return self(current + n); }
+
+  self &operator-=(difference_type n) const {
+    current += n;
+    return *this;
+  }
+
+  reference operator[](difference_type n) const { return *(*this + n); }
+
+  bool operator==(const self &rhs) const { return current == rhs.current; }
+  bool operator!=(const self &rhs) const { return !((*this) == rhs); }
+};
+
+template<class Iterator>
+inline bool operator==(const __reverse_iterator<Iterator> &lhs,
+                       const __reverse_iterator<Iterator> &rhs) {
+  return lhs.operator==(rhs);
+}
+
+template<class Iterator>
+inline bool operator!=(const __reverse_iterator<Iterator> &lhs,
+                       const __reverse_iterator<Iterator> &rhs) {
+  return !(lhs == rhs);
+}
+
+template<class Iterator>
+inline bool operator<(const __reverse_iterator<Iterator> &lhs,
+                      const __reverse_iterator<Iterator> &rhs) {
+  return rhs.base() < lhs.base();
+}
+
+template<class Iterator>
+inline bool operator>(const __reverse_iterator<Iterator> &lhs,
+                      const __reverse_iterator<Iterator> &rhs) {
+  return rhs < lhs;
+}
+
+template<class Iterator>
+inline bool operator<=(const __reverse_iterator<Iterator> &lhs,
+                       const __reverse_iterator<Iterator> &rhs) {
+  return !(rhs < lhs);
+}
+
+template<class Iterator>
+inline bool operator>=(const __reverse_iterator<Iterator> &lhs,
+                       const __reverse_iterator<Iterator> &rhs) {
+  return !(lhs < rhs);
+}
+
+template<class Iterator>
+inline typename __reverse_iterator<Iterator>::difference_type operator-(
+    const __reverse_iterator<Iterator> &lhs,
+    const __reverse_iterator<Iterator> &rhs) {
+  return rhs.base() - lhs.base();
+}
+
+template<class Iterator>
+inline __reverse_iterator<Iterator> operator+(
+    typename __reverse_iterator<Iterator>::difference_type n,
+    const __reverse_iterator<Iterator> &x) {
+  return __reverse_iterator<Iterator>(x.base() - n);
+}
+
+// stream:input_stream,output_stream
+
+template<class T, class Distance = ptrdiff_t>
+class istream_iterator {
+ protected:
+  std::istream *stream;
+  T value;
+  bool end_marker;
+  void read() {
+    end_marker = (*stream) ? true : false;
+    if (end_marker) *stream >> value;
+    //完成输入后，stream狀態可能发生了改變，再次判定
+    end_marker = (*stream) ? true : false;
+  }
+
+ public:
+  using iterator_category = input_iterator_tag;
+  using value_tyep = T;
+  using difference_type = Distance;
+  using pointer = const T *;//只能读取
+  using reference = const T &;
+
+  istream_iterator() : stream(&std::cin), end_marker(false) {}
+  istream_iterator(std::istream &s) : stream(&s) { read(); }
+
+  reference operator*() const { return value; }
+  pointer operator->() const { return &(operator*()); }
+
+  istream_iterator &operator++() {
+    read();
+    return *this;
+  }
+
+  istream_iterator operator++(int) {
+    istream_iterator temp = *this;
+    read();
+    return temp;
+  }
+};
+
+template<class T>
+class ostream_iterator {
+ protected:
+  std::ostream *stream;
+  const char *interval;//输出间隔符
+
+ public:
+  using iterator_category = output_iterator_tag;
+  using value_tyep = void;
+  using difference_type = void;
+  using pointer = void;
+  using reference = void;
+
+  ostream_iterator() : stream(&std::cout), interval(nullptr) {}
+  ostream_iterator(std::ostream &s, const char *c)
+      : stream(&s), interval(c) {}
+
+  ostream_iterator &operator=(const T &value) {
+    *stream << value;
+    if (interval) *stream << interval;
+    return *this;
+  }
+
+  ostream_iterator &operator*() { return *this; }
+  ostream_iterator &operator++() { return *this; }
+  ostream_iterator operator++(int) { return *this; }
+};
+
+
+
 
 
 
